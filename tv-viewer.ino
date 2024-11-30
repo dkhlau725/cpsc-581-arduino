@@ -1,6 +1,6 @@
 #include <LiquidCrystal.h>
 
-// Initialize the LCD ith the pins
+// Initialize the LCD with the pins
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 const int trigPin = 9;
