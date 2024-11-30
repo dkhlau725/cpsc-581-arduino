@@ -1,6 +1,6 @@
 #include <LiquidCrystal.h>
 
-// Initialize the library with the numbers of the interface pins
+// Initialize the LCD ith the pins
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
 
 const int trigPin = 9;
@@ -12,6 +12,7 @@ int buttonState = 0;
 long duration;
 int distance;
 
+// List of common TV sizes
 String tvSizes[] = {
   "24 inch Monitor", 
   "27 inch Monitor",
@@ -24,16 +25,17 @@ String tvSizes[] = {
   "85 inch TV     "
 };
 
+// List of the average viewing distance for each TV size
 int viewDistance[] = {
-  75, // 24in
-  83, // 27in
-  113, // 32in
-  135, // 43in
-  158, // 50in
-  170, // 55in
-  200, // 65in
-  230, // 75in
-  260 // 85in
+  75, // 24 in
+  83, // 27 in
+  113, // 32 in
+  135, // 43 in
+  158, // 50 in
+  170, // 55 in
+  200, // 65 in
+  230, // 75 in
+  260 // 85 in
 };
 
 float margin = 1.2;
@@ -43,8 +45,6 @@ int counter = 0;
 
 void setup() {
   lcd.begin(16, 2);
-  
-  // Set pin modes
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(ledPin, OUTPUT);
@@ -62,26 +62,28 @@ void loop() {
   delayMicroseconds(10);
   digitalWrite(trigPin, LOW);
 
-  // Read the echoPin, returns the sound wave travel time in microseconds
+  // Read the echoPin
   duration = pulseIn(echoPin, HIGH);
 
   // Calculate the distance
   distance = duration * 0.034 / 2;
 
- lcd.setCursor(0, 0); // Sets the location at which subsequent text written to the LCD will be displayed
-  lcd.print("Distance: "); // Prints string "Distance" on the LCD
-  lcd.print(distance); // Prints the distance value from the sensor
+ lcd.setCursor(0, 0); // Sets the cursor at the beginning of the LCD screen
+  lcd.print("Distance: ");
+  lcd.print(distance); 
   lcd.print(" cm ");
 
-  // LED lights up depending on range
+  // LED lights up if within optimal viewing range of the selected TV
   if (distance > viewDistance[currentTV] / margin && distance < viewDistance[currentTV] * margin) {
     digitalWrite(ledPin, HIGH);
   } else {
     digitalWrite(ledPin, LOW);
   }
 
+  // Read buton
   buttonState = digitalRead(buttonPin);
 
+  // Button to toggle through the TV sizes and print on LCD
   if (buttonState == HIGH) {
     lcd.setCursor(0, 1); 
     lcd.print(tvSizes[counter]); 
